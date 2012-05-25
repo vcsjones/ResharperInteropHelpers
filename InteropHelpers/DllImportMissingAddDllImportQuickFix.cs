@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using JetBrains.Application.Progress;
 using JetBrains.DocumentManagers;
 using JetBrains.ProjectModel;
@@ -30,6 +31,7 @@ namespace InteropHelpers
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
             var methodDeclaration = _highlighting.MethodDeclaration;
+            methodDeclaration.SetStatic(true);
             var factory = CSharpElementFactory.GetInstance(methodDeclaration.GetPsiModule());
             var type = TypeFactory.CreateTypeByCLRName(DllImportMissingAnalyzer.DllImportAttribute, methodDeclaration.GetPsiModule());
             var constantValue = new ConstantValue("name.dll", methodDeclaration.GetPsiModule());
@@ -49,7 +51,7 @@ namespace InteropHelpers
 
         public override string Text
         {
-            get { return "Add [DllImport]"; }
+            get { return "Add [DllImport] attribute"; }
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Daemon.Stages;
@@ -13,26 +14,28 @@ namespace InteropHelpers
         internal static readonly ClrTypeName DllImportAttribute = new ClrTypeName("System.Runtime.InteropServices.DllImportAttribute");
         protected override void Run(IMethodDeclaration element, ElementProblemAnalyzerData analyzerData, IHighlightingConsumer consumer)
         {
-            if (element.IsExtern)
+            Func<IAttribute, bool> isDllImportAttribute = a =>
             {
-                var attributes = element.Attributes;
-                if (attributes.Any(a =>
-                                       {
-                                           var typeReference = a.TypeReference;
-                                           if (typeReference != null)
-                                           {
-                                               var typeElement = typeReference.Resolve().DeclaredElement as ITypeElement;
-                                               if (typeElement != null && Equals(typeElement.GetClrName(), DllImportAttribute))
-                                               {
-                                                   return true;
-                                               }
-                                           }
-                                           return false;
-                                       }))
+                var typeReference = a.TypeReference;
+                if (typeReference != null)
                 {
-                    return;
+                    var typeElement = typeReference.Resolve().DeclaredElement as ITypeElement;
+                    if (typeElement != null && Equals(typeElement.GetClrName(), DllImportAttribute))
+                    {
+                        return true;
+                    }
                 }
+                return false;
+            };
+            var attributes = element.Attributes;
+            var hasDllImportAttribute = attributes.Any(isDllImportAttribute);
+            if (element.IsExtern && !hasDllImportAttribute)
+            {
                 consumer.AddHighlighting(new DllImportMissingHighlighting(element));
+            }
+            if ((!element.IsStatic || !element.IsExtern) && hasDllImportAttribute)
+            {
+                consumer.AddHighlighting(new ImportedMethodIsNotExternOrStaticHighlighting(element));
             }
         }
     }
