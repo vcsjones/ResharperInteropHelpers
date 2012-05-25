@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using JetBrains.Application.Progress;
 using JetBrains.DocumentManagers;
 using JetBrains.DocumentModel;
