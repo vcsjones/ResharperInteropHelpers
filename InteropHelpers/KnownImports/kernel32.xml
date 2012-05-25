@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<lib name="kernel32.dll">
+  <export name="CloseHandle">
+    <parameters>
+      <parameter index="0" name="hObject" direction="in" clrType="System.IntPtr" />
+    </parameters>
+    <return clrType="System.Boolean" />
+  </export>
+</lib>
