@@ -1,5 +1,5 @@
 ## What Is It?
-[Resharper Interop Assist] is a [Resharper](http://www.jetbrains.com/resharper) Plug In that assists in writing and consuming Interop code. Interop is tricky, and easy to get wrong. This tool aims to catch these problems, resulting in fewer bugs and less hairpulling.
+Resharper Interop Assist is a [Resharper](http://www.jetbrains.com/resharper) Plug In that assists in writing and consuming Interop code. Interop is tricky, and easy to get wrong. This tool aims to catch these problems, resulting in fewer bugs and less hairpulling.
 
 ## What Does It Do?
 It provides the developer warnings and quickfixes for common interop problems that don't immediately present themselves as a bug. Take this imported method declaration:
