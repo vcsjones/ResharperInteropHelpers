@@ -24,7 +24,7 @@ namespace InteropHelpers
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return true;
+            return _highlighting.IsValid();
         }
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
