@@ -10,22 +10,36 @@ namespace InteropHelpers.KnownImports
     {
         protected internal override void Intialize()
         {
-            AddDeclaration("CloseHandle", typeof (bool))
-                .AddParameter("hObject", typeof (IntPtr), UnmanagedType.SysInt);
+            AddDeclaration("AcquireSRWLockExclusive").
+                AddParameter("SRWLock", UnmanagedType.LPStruct, Modifiers.In | Modifiers.Out);
+
+            AddDeclaration("AcquireSRWLockShared").
+                AddParameter("SRWLock", UnmanagedType.LPStruct, Modifiers.In | Modifiers.Out);
+
+            AddDeclaration("ActivateActCtx", typeof(bool), UnmanagedType.Bool)
+                .AddParameter("hActCtx", typeof(IntPtr), UnmanagedType.SysInt)
+                .AddParameter("lpCookie", typeof(IntPtr), UnmanagedType.SysInt, Modifiers.Out);
+
+            AddDeclaration("AddAtom", typeof(ushort), UnmanagedType.U2, isUnicodeConvention : true)
+                .AddParameter("lpString", typeof(string), UnmanagedType.LPWStr);
+
+            AddDeclaration("CloseHandle", typeof(bool), UnmanagedType.Bool)
+                .AddParameter("hObject", typeof(IntPtr), UnmanagedType.SysInt);
+
         }
     }
 
     public abstract class Library : IEnumerable<Declaration>
     {
         private readonly Dictionary<string, Declaration> _declarations = new Dictionary<string, Declaration>();
-        protected Declaration AddDeclaration(string name, Modifiers modifiers = Modifiers.In, CallingConvention callingConvention = CallingConvention.StdCall)
+        protected Declaration AddDeclaration(string name, UnmanagedType? returnType = null, CallingConvention callingConvention = CallingConvention.StdCall, bool isUnicodeConvention = false)
         {
-            return AddDeclaration(name, typeof (void), modifiers, callingConvention);
+            return AddDeclaration(name, typeof(void), returnType, callingConvention);
         }
 
-        protected Declaration AddDeclaration(string name, Type returnType, Modifiers modifiers = Modifiers.In, CallingConvention callingConvention = CallingConvention.StdCall)
+        protected Declaration AddDeclaration(string name, Type returnCLRType, UnmanagedType? returnType = null, CallingConvention callingConvention = CallingConvention.StdCall, bool isUnicodeConvention = false)
         {
-            var declaration = new Declaration(name, returnType, modifiers, callingConvention);
+            var declaration = new Declaration(name, returnCLRType, returnType, callingConvention);
             _declarations.Add(name, declaration);
             return declaration;
         }
@@ -62,7 +76,7 @@ namespace InteropHelpers.KnownImports
     {
         public string Name { get; private set; }
         public Type CLRReturnType { get; private set; }
-        public Modifiers Modifiers { get; private set; }
+        public UnmanagedType? ReturnType { get; private set; }
         public CallingConvention CallingConvention { get; private set; }
         private readonly List<Parameter> _parameters;
         public ReadOnlyCollection<Parameter> Parameters
@@ -70,24 +84,24 @@ namespace InteropHelpers.KnownImports
             get { return _parameters.AsReadOnly(); }
         }
 
-        public Declaration(string name, Type clrReturnType, Modifiers modifiers, CallingConvention callingConvention)
+        public Declaration(string name, Type clrReturnType, UnmanagedType? returnType, CallingConvention callingConvention)
         {
             Name = name;
             CLRReturnType = clrReturnType;
-            Modifiers = modifiers;
+            ReturnType = returnType;
             CallingConvention = callingConvention;
             _parameters = new List<Parameter>();
         }
 
-        public Declaration AddParameter(string name, Type clrType, UnmanagedType? unmanagedType = null)
+        public Declaration AddParameter(string name, Type clrType, UnmanagedType? unmanagedType = null, Modifiers modifiers = Modifiers.In)
         {
-            _parameters.Add(new Parameter(name, clrType, unmanagedType));
+            _parameters.Add(new Parameter(name, clrType, unmanagedType, modifiers));
             return this;
         }
 
-        public Declaration AddParameter(string name, UnmanagedType? unmanagedType = null)
+        public Declaration AddParameter(string name, UnmanagedType? unmanagedType = null, Modifiers modifiers = Modifiers.In)
         {
-            _parameters.Add(new Parameter(name));
+            _parameters.Add(new Parameter(name, unmanagedType, modifiers));
             return this;
         }
     }
@@ -97,15 +111,18 @@ namespace InteropHelpers.KnownImports
         public string Name { get; private set; }
         public Type CLRType { get; private set; }
         public UnmanagedType? UnmanagedType { get; private set; }
+        public Modifiers Modifiers { get; set; }
 
-        public Parameter(string name, Type type, UnmanagedType? unmanagedType)
+        public Parameter(string name, Type type, UnmanagedType? unmanagedType, Modifiers modifiers = Modifiers.In)
         {
             Name = name;
             CLRType = type;
             UnmanagedType = unmanagedType;
+            Modifiers = modifiers;
         }
 
-        public Parameter(string name, UnmanagedType? unmanagedType = null) : this(name, typeof(object), unmanagedType)
+        public Parameter(string name, UnmanagedType? unmanagedType = null, Modifiers modifiers = Modifiers.In)
+            : this(name, typeof(object), unmanagedType, modifiers)
         {
         }
     }

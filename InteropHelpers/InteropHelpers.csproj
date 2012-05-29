@@ -40,10 +40,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeHelpers.cs" />
+    <Compile Include="DllImportIncorrectParameterMarshalHighlighting.cs" />
+    <Compile Include="DllImportIncorrectParameterMarshalQuickFix.cs" />
     <Compile Include="DllImportInt32ForIntPtrQuickFix.cs" />
     <Compile Include="DllImportInt32ForIntPtrHighlighting.cs" />
-    <Compile Include="DllImportInt32ForIntPtrAnalyzer.cs" />
-    <Compile Include="DllImportMethodProblemAnalyzer.cs" />
+    <Compile Include="DllImportParameterMarshallingAnalyzer.cs" />
+    <Compile Include="DllImportMethodProblemAnalyzerBase.cs" />
     <Compile Include="ImportedMethodIsNotExternOrStaticQuickFix.cs" />
     <Compile Include="DllImportMissingAddDllImportQuickFix.cs" />
     <Compile Include="DllImportMissingHighlighting.cs" />

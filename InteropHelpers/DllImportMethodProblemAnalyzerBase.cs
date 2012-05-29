@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace InteropHelpers
 {
-    public abstract class DllImportMethodProblemAnalyzer : ElementProblemAnalyzer<IMethodDeclaration>
+    public abstract class DllImportMethodProblemAnalyzerBase : ElementProblemAnalyzer<IMethodDeclaration>
     {
         private static readonly ClrTypeName DllImportAttribute = new ClrTypeName("System.Runtime.InteropServices.DllImportAttribute");
         protected sealed override void Run(IMethodDeclaration element, ElementProblemAnalyzerData data, IHighlightingConsumer consumer)
