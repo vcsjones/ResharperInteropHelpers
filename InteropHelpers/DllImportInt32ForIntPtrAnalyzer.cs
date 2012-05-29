@@ -16,7 +16,7 @@ namespace InteropHelpers
             var libraryName = importMethod.ImportedDll;
             var factory = new LibraryFactory();
             var library = factory.LoadLibrary(libraryName);
-            var export = library.GetExport(element.NameIdentifier.Name);
+            var export = library[element.NameIdentifier.Name];
             if (export == null)
             {
                 return;
@@ -29,7 +29,7 @@ namespace InteropHelpers
                     continue;
                 }
                 var knownParameter = export.Parameters[i];
-                var exportedType = new ClrTypeName(knownParameter.ClrType);
+                var exportedType = new ClrTypeName(knownParameter.CLRType.FullName);
                 
                 if (exportedType.Equals(IntPtrClrType))
                 {
