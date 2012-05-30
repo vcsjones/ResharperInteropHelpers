@@ -22,3 +22,9 @@ The goal of Resharper Interop Assist is to provide as much assistance as possibl
 
 ## How Do I Install It?
 Not at the moment. Right now the project is currently too incomplete to focus on this. However, if you want to try it out, you can download the [Resharper SDK](http://www.jetbrains.com/resharper/download/) and build it yourself.
+
+##License
+
+![Creative Commons License](http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png "Creative Commons License")
+
+Resharper Interop Assist by [Kevin Jones](http://vcsjones.com) is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/).
